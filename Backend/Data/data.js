@@ -7,7 +7,7 @@ const chats = [
         email: "john@example.com",
       },
       {
-name: "Piyush",
+        name: "Piyush",
         email: "piyush@example.com",
       },
     ],
@@ -19,11 +19,11 @@ isGroupChat: false,
     users:
     [
       {
-    name: "Guest User",
+        name: "Guest User",
         email: "guest@example.com",
       },
       {
-    name: "Piyush",
+        name: "Piyush",
         email: "piyush@example.com",
       },
     ],
@@ -35,11 +35,11 @@ isGroupChat: false,
     users:
     [
       {
-    name: "Anthony",
+        name: "Anthony",
         email: "anthony@example.com",
       },
       {
-    name: "Piyush",
+        name: "Piyush",
         email: "piyush@example.com",
       },
     ],
@@ -51,15 +51,15 @@ isGroupChat: true,
     users:
     [
       {
-    name: "John Doe",
+        name: "John Doe",
         email: "jon@example.com",
       },
       {
-    name: "Piyush",
+        name: "Piyush",
         email: "piyush@example.com",
       },
       {
-    name: "Guest User",
+        name: "Guest User",
         email: "guest@example.com",
       },
     ],
@@ -67,7 +67,7 @@ isGroupChat: true,
     chatName: "Friends",
     groupAdmin:
     {
-    name: "Guest User",
+      name: "Guest User",
       email: "guest@example.com",
     },
   },
@@ -76,7 +76,7 @@ isGroupChat: false,
     users:
     [
       {
-    name: "Jane Doe",
+        name: "Jane Doe",
         email: "jane@example.com",
       },
       {
@@ -92,15 +92,15 @@ isGroupChat: true,
     users:
     [
       {
-    name: "John Doe",
+        name: "John Doe",
         email: "jon@example.com",
       },
       {
-    name: "Piyush",
+        name: "Piyush",
         email: "piyush@example.com",
       },
       {
-    name: "Guest User",
+        name: "Guest User",
         email: "guest@example.com",
       },
     ],
@@ -108,7 +108,7 @@ isGroupChat: true,
     chatName: "Chill Zone",
     groupAdmin:
     {
-    name: "Guest User",
+      name: "Guest User",
       email: "guest@example.com",
     },
   },

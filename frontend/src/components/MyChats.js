@@ -2,9 +2,10 @@ import { AddIcon } from "@chakra-ui/icons";
 import { Box, Stack, Text } from "@chakra-ui/layout";
 import { useToast } from "@chakra-ui/toast";
 import axios from "axios";
-import React,{ useEffect, useState } from "react";
-import { getSender } from "../components/config/ChatLogics";
+import { useEffect, useState } from "react";
+import { getSender } from "./config/ChatLogics";
 import ChatLoading from "./ChatLoading";
+import GroupChatModal from "./miscellaneous/GroupChatModal";
 import { Button } from "@chakra-ui/react";
 import { ChatState } from "../Context/ChatProvider";
 
@@ -41,6 +42,7 @@ const MyChats = ({ fetchAgain }) => {
   useEffect(() => {
     setLoggedUser(JSON.parse(localStorage.getItem("userInfo")));
     fetchChats();
+    console.log("i feteched the chats");
     // eslint-disable-next-line
   }, [fetchAgain]);
 
@@ -66,7 +68,7 @@ const MyChats = ({ fetchAgain }) => {
         alignItems="center"
       >
         My Chats
-        
+        <GroupChatModal>
           <Button
             d="flex"
             fontSize={{ base: "17px", md: "10px", lg: "17px" }}
@@ -74,7 +76,7 @@ const MyChats = ({ fetchAgain }) => {
           >
             New Group Chat
           </Button>
-        
+        </GroupChatModal>
       </Box>
       <Box
         d="flex"
@@ -104,7 +106,14 @@ const MyChats = ({ fetchAgain }) => {
                     ? getSender(loggedUser, chat.users)
                     : chat.chatName}
                 </Text>
-                
+                {chat.latestMessage && (
+                  <Text fontSize="xs">
+                    <b>{chat.latestMessage.sender.name} : </b>
+                    {chat.latestMessage.content.length > 50
+                      ? chat.latestMessage.content.substring(0, 51) + "..."
+                      : chat.latestMessage.content}
+                  </Text>
+                )}
               </Box>
             ))}
           </Stack>

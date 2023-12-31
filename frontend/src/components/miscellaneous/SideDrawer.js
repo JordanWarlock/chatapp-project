@@ -26,7 +26,7 @@ import { useToast } from "@chakra-ui/toast";
 import ChatLoading from "../ChatLoading";
 import { Spinner } from "@chakra-ui/spinner";
 import ProfileModal from "./ProfileModal";
-import { getSender } from "../config/ChatLogics";
+import { getSender } from ".././config/ChatLogics";
 import UserListItem from "../UserAvatar/UserListItem";
 import { ChatState } from "../../Context/ChatProvider";
 
@@ -51,6 +51,7 @@ function SideDrawer() {
 
   const logoutHandler = () => {
     localStorage.removeItem("userInfo");
+    window.location.reload(false);
     history.push("/");
   };
 
@@ -102,7 +103,7 @@ function SideDrawer() {
           Authorization: `Bearer ${user.token}`,
         },
       };
-      const { data } = await axios.post("/api/chat", { userId }, config);
+      const { data } = await axios.post(`/api/chat`, { userId }, config);
 
       if (!chats.find((c) => c._id === data._id)) setChats([data, ...chats]);
       setSelectedChat(data);
@@ -123,18 +124,18 @@ function SideDrawer() {
   return (
     <>
       <Box
-        d="flex"
+        display="flex"
         justifyContent="space-between"
         alignItems="center"
         bg="white"
         w="100%"
-        p="5px 10px 5px 10px"
+        p="5px 10px"
         borderWidth="5px"
       >
         <Tooltip label="Search Users to chat" hasArrow placement="bottom-end">
           <Button variant="ghost" onClick={onOpen}>
             <i className="fas fa-search"></i>
-            <Text d={{ base: "none", md: "flex" }} px={4}>
+            <Text d={{ base: "none", md: "flex" }} paddingLeft={4}>
               Search User
             </Text>
           </Button>
@@ -145,7 +146,6 @@ function SideDrawer() {
         <div>
           <Menu>
             <MenuButton p={1}>
-              
               <BellIcon fontSize="2xl" m={1} />
             </MenuButton>
             <MenuList pl={2}>

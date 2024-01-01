@@ -78,6 +78,7 @@ const sendMessage = async (event) => {
       
       setMessages([...messages, data]);
     } catch (error) {
+      console.log(error);
       toast({
         title: "Error Occured!",
         description: "Failed to send the Message",

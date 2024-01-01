@@ -26,7 +26,9 @@ import { useToast } from "@chakra-ui/toast";
 import ChatLoading from "../ChatLoading";
 import { Spinner } from "@chakra-ui/spinner";
 import ProfileModal from "./ProfileModal";
-import { getSender } from ".././config/ChatLogics";
+import NotificationBadge from "react-notification-badge";
+import { Effect } from "react-notification-badge";
+import { getSender } from "../config/ChatLogics";
 import UserListItem from "../UserAvatar/UserListItem";
 import { ChatState } from "../../Context/ChatProvider";
 
@@ -129,7 +131,7 @@ function SideDrawer() {
         alignItems="center"
         bg="white"
         w="100%"
-        p="5px 10px"
+        p="5px 10px "
         borderWidth="5px"
       >
         <Tooltip label="Search Users to chat" hasArrow placement="bottom-end">
@@ -146,6 +148,10 @@ function SideDrawer() {
         <div>
           <Menu>
             <MenuButton p={1}>
+              <NotificationBadge
+                count={notification.length}
+                effect={Effect.SCALE}
+              />
               <BellIcon fontSize="2xl" m={1} />
             </MenuButton>
             <MenuList pl={2}>
@@ -193,7 +199,7 @@ function SideDrawer() {
             <Box d="flex" pb={2}>
               <Input
                 placeholder="Search by name or email"
-                mr={2}
+                mr={1}
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
               />
@@ -210,7 +216,7 @@ function SideDrawer() {
                 />
               ))
             )}
-            {loadingChat && <Spinner ml="auto" d="flex" />}
+            {loadingChat && <Spinner ml="auto" display="flex" />}
           </DrawerBody>
         </DrawerContent>
       </Drawer>

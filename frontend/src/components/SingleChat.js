@@ -15,7 +15,7 @@ import animationData from "../animations/typing.json";
 import io from "socket.io-client";
 import UpdateGroupChatModal from "./miscellaneous/UpdateGroupChatModal";
 import { ChatState } from "../Context/ChatProvider";
-const ENDPOINT = "http://localhost:5000"; 
+const ENDPOINT = "http://localhost:5000";
 var socket, selectedChatCompare;
 
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
@@ -37,7 +37,6 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   };
   const { selectedChat, setSelectedChat, user, notification, setNotification } =
     ChatState();
-
 
   const fetchMessages = async () => {
     if (!selectedChat) return;
@@ -71,9 +70,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     }
   };
 
- 
-
-      const sendMessage = async (event) => {
+  const sendMessage = async (event) => {
     if (event.key === "Enter" && newMessage) {
       socket.emit("stop typing", selectedChat._id);
       try {
@@ -107,16 +104,15 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     }
   };
 
+  useEffect(() => {
+    socket = io(ENDPOINT);
+    socket.emit("setup", user);
+    socket.on("connection", () => setSocketConnected(true));
+    socket.on("typing", () => setIsTyping(true));
+    socket.on("stop typing", () => setIsTyping(false));
 
-   useEffect(() => {
-     socket = io(ENDPOINT);
-     socket.emit("setup", user);
-     socket.on("connection", () => setSocketConnected(true));
-     socket.on("typing", () => setIsTyping(true));
-     socket.on("stop typing", () => setIsTyping(false));
-
-     // eslint-disable-next-line
-   }, []);
+    // eslint-disable-next-line
+  }, []);
 
   useEffect(() => {
     fetchMessages();
@@ -126,22 +122,46 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   }, [selectedChat]);
 
   useEffect(() => {
-    socket.on("message", (newMessageRecieved) => {
-      console.log(newMessageRecieved);
+    socket = io(ENDPOINT);
+    socket.emit("setup", user);
+    socket.on("connection", () => setSocketConnected(true));
+    socket.on("typing", () => setIsTyping(true));
+    socket.on("stop typing", () => setIsTyping(false));
+
+    return () => {
+      // Clean up socket connections when component unmounts
+      socket.off("connection");
+      socket.off("typing");
+      socket.off("stop typing");
+    };
+  }, [user]); // Only set up socket once when user changes
+
+  useEffect(() => {
+    const handleMessage = (newMessageReceived) => {
+      console.log(newMessageReceived);
       if (
-        !selectedChatCompare || // if chat is not selected or doesn't match current chat
-        selectedChatCompare._id !== newMessageRecieved.chat._id
+        newMessageReceived.chat._id !== selectedChat._id ||
+        (selectedChatCompare && selectedChatCompare._id !== selectedChat._id)
       ) {
-        if (!notification.includes(newMessageRecieved)) {
-          setNotification([newMessageRecieved, ...notification]);
+        if (!notification.some((msg) => msg._id === newMessageReceived._id)) {
+          setNotification([newMessageReceived, ...notification]);
           setFetchAgain(!fetchAgain);
         }
       } else {
-        setMessages([...messages, newMessageRecieved]);
+        setMessages((prevMessages) => [...prevMessages, newMessageReceived]);
       }
-    });
-  });
+    };
 
+    if (socket && selectedChat) {
+      socket.on("message", handleMessage);
+    }
+
+    return () => {
+      if (socket) {
+        socket.off("message", handleMessage);
+      }
+    };
+  }, [socket, selectedChat, notification, fetchAgain]);
   const typingHandler = (e) => {
     setNewMessage(e.target.value);
 

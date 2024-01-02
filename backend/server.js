@@ -1,11 +1,14 @@
 const express = require("express");
 const connectDB = require("./config/db");
-const color =require("colors")
+const color = require("colors");
 const dotenv = require("dotenv");
 const userRoutes = require("./routes/userRoutes");
 const chatRoutes = require("./routes/chatRoutes");
 const messageRoutes = require("./routes/messageRoutes");
-const { notFound, errorHandler } = require("../Backend/middlewares/errorMiddlerware");
+const {
+  notFound,
+  errorHandler,
+} = require("../Backend/middlewares/errorMiddlerware");
 
 dotenv.config();
 connectDB();
@@ -13,14 +16,13 @@ const app = express();
 
 app.use(express.json()); // to accept json data
 
- app.get("/", (req, res) => {
-   res.send("API Running!");
- });
+app.get("/", (req, res) => {
+  res.send("API Running!");
+});
 
 app.use("/api/user", userRoutes);
 app.use("/api/chat", chatRoutes);
 app.use("/api/message", messageRoutes);
-
 
 // Error Handling middlewares
 app.use(notFound);
@@ -36,7 +38,7 @@ const server = app.listen(
 const io = require("socket.io")(server, {
   pingTimeout: 60000,
   cors: {
-    origin: "http://localhost:3000",
+    origin: "*",
     // credentials: true,
   },
 });
@@ -47,7 +49,6 @@ io.on("connection", (socket) => {
     socket.join(userData._id);
     socket.emit("connected");
   });
-
   socket.on("join chat", (room) => {
     socket.join(room);
     console.log("User Joined Room: " + room);
@@ -59,14 +60,9 @@ io.on("connection", (socket) => {
     var chat = newMessageRecieved.chat;
     if (!chat.users) return console.log("chat.users not defined");
 
-    chat.users.forEach((user) => {
-      if (user._id == newMessageRecieved.sender._id) return;
-
-      socket.in(user._id).emit("message", newMessageRecieved);
-      console.log(newMessageRecieved);
-    });
+    console.log(newMessageRecieved.chat._id);
+    socket.in(newMessageRecieved.chat._id).emit("message", newMessageRecieved);
   });
-
   socket.off("setup", () => {
     console.log("USER DISCONNECTED");
     //socket.leave(userData._id);

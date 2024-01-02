@@ -58,6 +58,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       setLoading(false);
 
       socket.emit("join chat", selectedChat._id);
+      
     } catch (error) {
       toast({
         title: "Error Occured!",
@@ -107,7 +108,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   useEffect(() => {
     socket = io(ENDPOINT);
     socket.emit("setup", user);
-    socket.on("connection", () => setSocketConnected(true));
+    socket.on("connected", () => setSocketConnected(true));
     socket.on("typing", () => setIsTyping(true));
     socket.on("stop typing", () => setIsTyping(false));
 
@@ -134,8 +135,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       socket.off("typing");
       socket.off("stop typing");
     };
-  }, [user]); // Only set up socket once when user changes
-
+  }, [user]); // Only set up socket once when user changes  
   useEffect(() => {
     const handleMessage = (newMessageReceived) => {
       console.log(newMessageReceived);

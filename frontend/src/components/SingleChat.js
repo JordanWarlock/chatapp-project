@@ -128,13 +128,8 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
     socket.on("typing", () => setIsTyping(true));
     socket.on("stop typing", () => setIsTyping(false));
 
-    return () => {
-      // Clean up socket connections when component unmounts
-      socket.off("connection");
-      socket.off("typing");
-      socket.off("stop typing");
-    };
-  }, [user]); // Only set up socket once when user changes
+  }, [user]); 
+
 
   useEffect(() => {
     const handleMessage = (newMessageReceived) => {
@@ -165,7 +160,6 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   const typingHandler = (e) => {
     setNewMessage(e.target.value);
 
-    if (!socketConnected) return;
 
     if (!typing) {
       setTyping(true);
@@ -276,7 +270,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         </>
       ) : (
         // to get socket.io on same page
-        <Box d="flex" alignItems="center" justifyContent="center" h="100%">
+        <Box display="flex" alignItems="center" justifyContent="center" h="100%">
           <Text fontSize="3xl" pb={3} fontFamily="Work sans">
             Click on a user to start chatting
           </Text>

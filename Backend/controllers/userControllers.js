@@ -42,14 +42,23 @@ const authUser = asyncHandler(async (req, res) => {
 
   const user = await User.findOne({ email });
 
-  if (user && (await user.matchPassword(password))) {
-    res.json({
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      pic: user.pic,
-      token: generateToken(user._id),
-    });
+  if (user) {
+    const isPasswordValid = await user.matchPassword(password);
+    if (isPasswordValid) {
+      res.json({
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        pic: user.pic,
+        token: generateToken(user._id),
+      });
+    } else {
+      res.status(401);
+      throw new Error('Invalid email or password');
+    }
+  } else {
+    res.status(401);
+    throw new Error('Invalid email or password');
   }
 });
 const allUsers = asyncHandler(async (req, res) => {

@@ -28,7 +28,6 @@ import { Spinner } from "@chakra-ui/spinner";
 import ProfileModal from "./ProfileModal";
 import NotificationBadge from "react-notification-badge";
 import { Effect } from "react-notification-badge";
-import { getSender } from "../config/ChatLogics";
 import UserListItem from "../UserAvatar/UserListItem";
 import { ChatState } from "../../Context/ChatProvider";
 
@@ -166,7 +165,7 @@ function SideDrawer() {
                 >
                   {notif.chat.isGroupChat
                     ? `New Message in ${notif.chat.chatName}`
-                    : `New Message from ${getSender(user, notif.chat.users)}`}
+                    : `New Message from ${notif.sender.name}`}
                 </MenuItem>
               ))}
             </MenuList>

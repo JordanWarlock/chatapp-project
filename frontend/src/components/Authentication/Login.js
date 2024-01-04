@@ -45,7 +45,6 @@ const Login = () => {
         { email, password },
         config
       );
-
       toast({
         title: "Login Successful",
         status: "success",
@@ -58,15 +57,27 @@ const Login = () => {
       setLoading(false);
       history.push("/chats");
     } catch (error) {
-      toast({
-        title: "Error Occured!",
-        description: error.response.data.message,
-        status: "error",
-        duration: 5000,
-        isClosable: true,
-        position: "bottom",
-      });
-      setLoading(false);
+      setLoading(false); // Ensure loading state is set to false
+
+  if (error.response && error.response.status === 401) {
+    toast({
+      title: "Invalid Credentials",
+      description: "Please check your email and password.",
+      status: "error",
+      duration: 5000,
+      isClosable: true,
+      position: "bottom",
+    });
+  } else {
+    toast({
+      title: "Error Occurred!",
+      description: "An unexpected error occurred. Please try again later.",
+      status: "error",
+      duration: 5000,
+      isClosable: true,
+      position: "bottom",
+    });
+  }
     }
   };
 
